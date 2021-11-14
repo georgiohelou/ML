@@ -118,6 +118,7 @@ def evaluate_model(test_dl, model):
     predictions, actuals = vstack(predictions), vstack(actuals)
     # calculate mse
     mse = mean_squared_error(actuals, predictions)
+    #*******Return or extract predictions to put in submission
     return mse
  
 # make a class prediction for one row of data
