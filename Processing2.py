@@ -1,42 +1,63 @@
 from typing import Dict
-
+import pickle
 
 def process_inverted():  
-    with open('test2.txt') as f:
+    with open('abstracts.txt') as f:
         lines = f.readlines()
         Dict = {}
-        for i in range(len(lines)): # read paper by paper
-            current_line=lines[i]
-            strX = current_line
-            key=int(current_line.split('----')[0]) # extract paper/abstract ID
-            strX = strX.split('----')[1]
-            abstract_size=current_line.split('\"IndexLength\":')[1]
-            strX = strX.split('\"IndexLength\":')[1]
-            abstract_size=int(abstract_size.split(",")[0]) # read IndexLength value
-            strX = strX.split(',\"InvertedIndex\":{')[1]
-            abstract_array=[None]*abstract_size
-            if strX[-1] == "}" and strX[-2] == "}":
-                strX = strX[:-2]  # rmv "}}" at the very end
-                strX += '++++++'  # setting flag
-            
-            count = 0
-            while strX.split('++++++')[0] is not '':
-                strY = strX.split('\"', 2) # split based on 2 "                
-                word = (strY[1])
-                # word = process_word(word)
-                strX = strY[2]
-                strY = strX.split('[', 1)[1]
-                strY = strY.split(']', 1)
-                indices = strY[0]
-                process_indices(word, indices, abstract_array)
-                strX = strY[1]
-                count += 1
+        try:
+            for i in range(len(lines)): # read paper by paper
+                print("At line ", i)
+                current_line=lines[i]
+                # print("line :\n", current_line)
+                strX = current_line
+                key=int(current_line.split('----{')[0]) # extract paper/abstract ID
+                strX = strX.split('----{')[1]
+                abstract_size=current_line.split('\"IndexLength\":')[1]
+                strX = strX.strip()
+                strX = strX.split('\"IndexLength\":')[1]
+                abstract_size=int(abstract_size.split(",")[0]) # read IndexLength value
+                strX = strX.split(',\"InvertedIndex\":{')[1]
+                abstract_array=[None]*abstract_size
+                if strX[-1] == "}" and strX[-2] == "}":
+                    strX = strX[:-2]  # rmv "}}" at the very end
+                    strX += '++++++'  # setting flag
 
+                count = 0
+                while strX.split('++++++')[0] != '':
+                    strY = strX.split('\"', 1)[1]        
+                    strY = strY.split("\":", 1)
+                    word = (strY[0])
+                    strX = strY[1]
+                    strY = strX.split('[', 1)[1]
+                    strY = strY.split(']', 1)
+                    indices = strY[0]
+                    process_indices(word, indices, abstract_array)
+                    strX = strY[1]
+                    count += 1
+                ## iterate through array and replace all "None" by an empty string ##
+                for k in range(len(abstract_array)):
+                    if abstract_array[k] is None:
+                        abstract_array[k] = ""
+
+                s = generate_abstract(abstract_array)
+                Dict[key] = s
+                # break
+
+        except Exception as e:
+            print("current_line :\n", current_line)
+            print("**********")
             print(abstract_array)
-            s = generate_abstract(abstract_array)
-            print(s)
-            return
-            
+            print("**********")
+            print(e)
+            print("**********")
+            print(e.message, e.args)
+            print("**********")
+    print("len(Dict) : ", len(Dict))
+
+    a_file = open("abstracts_data.pkl", "wb")
+    pickle.dump(Dict, a_file)
+    a_file.close()
 
 def process_indices(word, x, arr):
     ## input: word and string x containing comma-separated indices for the word
