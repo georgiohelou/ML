@@ -9,7 +9,6 @@ def process_inverted():
             for i in range(len(lines)): # read paper by paper
                 print("At line ", i)
                 current_line=lines[i]
-                # print("line :\n", current_line)
                 strX = current_line
                 key=int(current_line.split('----{')[0]) # extract paper/abstract ID
                 strX = strX.split('----{')[1]
@@ -28,6 +27,7 @@ def process_inverted():
                     strY = strX.split('\"', 1)[1]        
                     strY = strY.split("\":", 1)
                     word = (strY[0])
+                    # word = process_word(word) # uncomment to remove non-alphanumeric characters 
                     strX = strY[1]
                     strY = strX.split('[', 1)[1]
                     strY = strY.split(']', 1)
@@ -42,7 +42,6 @@ def process_inverted():
 
                 s = generate_abstract(abstract_array)
                 Dict[key] = s
-                # break
 
         except Exception as e:
             print("current_line :\n", current_line)
