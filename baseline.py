@@ -5,6 +5,7 @@ import networkx as nx
 from sklearn.linear_model import Lasso
 from page import pagerank
 from Bert_function import author_embedding
+from deepwalk_generate import DpWalk
 
 
 # read training data
@@ -15,13 +16,12 @@ n_train = df_train.shape[0]
 df_test = pd.read_csv('test.csv', dtype={'author': np.int64})
 n_test = df_test.shape[0]
 
-# load the graph    
-G = nx.read_edgelist('coauthorship.edgelist', delimiter=' ', nodetype=int)
+# load the graph  
+G = nx.read_edgelist('test.edgelist', delimiter=' ', nodetype=int)
 n_nodes = G.number_of_nodes()
 n_edges = G.number_of_edges() 
 print('Number of nodes:', n_nodes)
 print('Number of edges:', n_edges)
-
 
 # computes structural features for each node
 print("calculating core_number")
@@ -31,10 +31,18 @@ centrality = nx.eigenvector_centrality(G)
 
 #Clustering Coefficient
 print("calculating Clustering Coefficient")
-cc=nx.average_clustering(G)
+cc=nx.clustering(G)
 #computes the page rank
 print("calculating Page rank")
 pr=nx.pagerank(G,0.4)
+
+print("calculating deep walk")
+#computes Deep Walk
+mapping = {old_label:new_label for new_label, old_label in enumerate(G.nodes())}
+print(mapping)
+H = nx.relabel_nodes(G, mapping)
+dw=DpWalk(H)
+
 
 #*******Get word embeddings
     #iterate for each author
@@ -50,7 +58,7 @@ pr=nx.pagerank(G,0.4)
 # create the training matrix. each node is represented as a vector of 3 features:
 # (1) its degree, (2) its core number ..
 print("Setting train data")
-X_train = np.zeros((n_train, 5))
+X_train = np.zeros((n_train, 6))
 y_train = np.zeros(n_train)
 for i,row in df_train.iterrows():
     node = row['author']
@@ -59,6 +67,7 @@ for i,row in df_train.iterrows():
     X_train[i,2] = pr[node]
     X_train[i,3] = centrality[node]
     X_train[i,4] = cc[node]
+    X_train[i,5] = dw[mapping[node]]
 
     #*******Add word encoding features
 
@@ -67,7 +76,7 @@ for i,row in df_train.iterrows():
 # create the test matrix. each node is represented as a vector of 3 features:
 # (1) its degree, (2) its core number ..
 print("Setting test data")
-X_test = np.zeros((n_test, 5))
+X_test = np.zeros((n_test, 6))
 for i,row in df_test.iterrows():
     node = row['author']
     X_test[i,0] = G.degree(node)
@@ -75,6 +84,7 @@ for i,row in df_test.iterrows():
     X_test[i,2] = pr[node]
     X_test[i,3] = centrality[node]
     X_test[i,4] = cc[node]
+    X_test[i,5] = dw[mapping[node]]
     #*******Add word encoding features
 
 
