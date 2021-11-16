@@ -1,0 +1,15 @@
+'''
+create our final dictionary that takes Authors_id as keys
+and for each has a single value associated : the concatenation of
+all abstracts strings (in case this author had several papers) 
+after they have been preprocessed to remove stopwords
+'''
+
+def dictionary_concatenation(dico_paperid_to_abs, dico_authorid_to_paperid):
+	dico_author_to_concatAbs = {}
+	for author in dico_authorid_to_paperid:
+		concatenated_abs = ''
+		for paperid in dico_authorid_to_paperid[author]:
+			concatenated_abs+= dico_paperid_to_abs[paperid]
+		dico_author_to_concatAbs[author] = concatenated_abs
+	return dico_author_to_concatAbs
