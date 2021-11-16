@@ -24,9 +24,16 @@ print('Number of edges:', n_edges)
 
 
 # computes structural features for each node
+print("calculating core_number")
 core_number = nx.core_number(G)
+#node centrality
+centrality = nx.eigenvector_centrality(G)
 
+#Clustering Coefficient
+print("calculating Clustering Coefficient")
+cc=nx.average_clustering(G)
 #computes the page rank
+print("calculating Page rank")
 pr=nx.pagerank(G,0.4)
 
 #*******Get word embeddings
@@ -42,13 +49,16 @@ pr=nx.pagerank(G,0.4)
 
 # create the training matrix. each node is represented as a vector of 3 features:
 # (1) its degree, (2) its core number ..
-X_train = np.zeros((n_train, 3))
+print("Setting train data")
+X_train = np.zeros((n_train, 5))
 y_train = np.zeros(n_train)
 for i,row in df_train.iterrows():
     node = row['author']
     X_train[i,0] = G.degree(node)
     X_train[i,1] = core_number[node]
     X_train[i,2] = pr[node]
+    X_train[i,3] = centrality[node]
+    X_train[i,4] = cc[node]
 
     #*******Add word encoding features
 
@@ -56,18 +66,24 @@ for i,row in df_train.iterrows():
 
 # create the test matrix. each node is represented as a vector of 3 features:
 # (1) its degree, (2) its core number ..
-X_test = np.zeros((n_test, 3))
+print("Setting test data")
+X_test = np.zeros((n_test, 5))
 for i,row in df_test.iterrows():
     node = row['author']
     X_test[i,0] = G.degree(node)
     X_test[i,1] = core_number[node]
     X_test[i,2] = pr[node]
+    X_test[i,3] = centrality[node]
+    X_test[i,4] = cc[node]
     #*******Add word encoding features
 
 
 # train a regression model and make predictions
+print("Creating Model")
 reg = Lasso(alpha=0.1)
+print("Started Training")
 reg.fit(X_train, y_train)
+print("Started Testing")
 y_pred = reg.predict(X_test)
 
 # write the predictions to file
