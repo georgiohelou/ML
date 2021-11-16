@@ -22,6 +22,7 @@ def author_embedding(text):
     # Split the sentence into tokens.
     tokenized_text = tokenizer.tokenize(marked_text)
 
+
     # Map the token strings to their vocabulary indeces.
     indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text)
 
@@ -53,9 +54,14 @@ def author_embedding(text):
         # https://huggingface.co/transformers/model_doc/bert.html#bertmodel
         hidden_states = outputs[2]
 
-        # Concatenate the tensors for all layers. We use `stack` here to
+
+
+         # Concatenate the tensors for all layers. We use `stack` here to
     # create a new dimension in the tensor.
     token_embeddings = torch.stack(hidden_states, dim=0)
+
+    # Remove dimension 1, the "batches".
+    token_embeddings = torch.squeeze(token_embeddings, dim=1)
 
     token_embeddings.size()
 
@@ -72,5 +78,7 @@ def author_embedding(text):
 
     # Calculate the average of all 22 token vectors.
     sentence_embedding = torch.mean(token_vecs, dim=0)
+
+    print ("Our final sentence embedding vector of shape:", sentence_embedding.size())
 
     return sentence_embedding
