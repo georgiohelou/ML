@@ -2,7 +2,7 @@ from typing import Dict
 import pickle
 
 def process_abstracts():  
-    with open('abstracts.txt') as f:
+    with open('abstracts2.txt') as f:
         lines = f.readlines()
         Dict = {}
         try:

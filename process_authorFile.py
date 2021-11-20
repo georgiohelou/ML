@@ -6,7 +6,7 @@ import sys
 
 def process_authorFiles():
 	dico_authors_to_paperid = {}
-	with open(os.path.join(sys.path[0], "author_papers.txt"), "r") as file1:
+	with open(os.path.join(sys.path[0], "author_papers2.txt"), "r") as file1:
 		while True:
 		    # Get next line from file
 		    line = file1.readline()
