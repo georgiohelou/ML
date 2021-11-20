@@ -4,7 +4,7 @@ process the author_papers.txt file into a dictionary
 import os
 import sys
 
-def process_file_to_dico():
+def process_authorFiles():
 	dico_authors_to_paperid = {}
 	with open(os.path.join(sys.path[0], "author_papers.txt"), "r") as file1:
 		while True:
@@ -20,5 +20,5 @@ def process_file_to_dico():
 	return dico_authors_to_paperid
 
 if __name__ == "__main__" :
-	dic = process_file_to_dico()
+	dic = process_authorFiles()
 	print(dic)
