@@ -57,6 +57,7 @@ def process_inverted():
     a_file = open("abstracts_data.pkl", "wb")
     pickle.dump(Dict, a_file)
     a_file.close()
+    return Dict
 
 def process_indices(word, x, arr):
     ## input: word and string x containing comma-separated indices for the word
