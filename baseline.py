@@ -14,17 +14,17 @@ from MLP import prepare_data, MLP, train_model, evaluate_model, predict
 
 print("reading training data")
 # read training data
-df_train = pd.read_csv('train2.csv', dtype={'author': np.int64, 'hindex': np.float32})
+df_train = pd.read_csv('train.csv', dtype={'author': np.int64, 'hindex': np.float32})
 n_train = df_train.shape[0]
 
 print("reading test data")
 # read test data
-df_test = pd.read_csv('test2.csv', dtype={'author': np.int64})
+df_test = pd.read_csv('test.csv', dtype={'author': np.int64})
 n_test = df_test.shape[0]
 
 print("loading graph")
 # load the graph  
-G = nx.read_edgelist('coauthorship2.edgelist', delimiter=' ', nodetype=int)
+G = nx.read_edgelist('coauthorship.edgelist', delimiter=' ', nodetype=int)
 n_nodes = G.number_of_nodes()
 n_edges = G.number_of_edges() 
 print('Number of nodes:', n_nodes)
