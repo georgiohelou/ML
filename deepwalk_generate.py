@@ -7,7 +7,7 @@ def DpWalk(G):
     #G = nx.karate_club_graph()
     # load the DeepWalk model and set parameters
     #***** can increase dimension
-    dw = DeepWalk(dimensions=1)
+    dw = DeepWalk(dimensions=64)
     # fit the model
     dw.fit(G)
     # extract embeddings

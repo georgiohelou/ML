@@ -86,7 +86,7 @@ for author in DictForAuthor:
         AuthorEmbedding[float(author)] = author_embedding(' '.join(DictForAuthor[author].split()[:512]))
 
 
-X = np.zeros((n_train, 768+6+1))
+X = np.zeros((n_train, 768+5+64+1))
 #775
 
 #create array of features and y
@@ -98,9 +98,10 @@ for i,row in df_train.iterrows():
     X[i,770] = pr[node]
     X[i,771] = centrality[node]
     X[i,772] = cc[node]
-    X[i,773] = dw[mapping[node]]
-    X[i,774] = row['hindex']
+    X[i,773:837] = dw[mapping[node]]
+    X[i,837] = row['hindex']
 
+print(X)
 #convert to CSV file
 pd.DataFrame(X).to_csv("file.csv", header=None, index=None)
 
@@ -111,7 +112,7 @@ path = 'file.csv'
 train_dl, test_dl = prepare_data(path)
 print(len(train_dl.dataset), len(test_dl.dataset))
 # define the network
-model = MLP(774)
+model = MLP(837)
 # train the model
 train_model(train_dl, model)
 # evaluate the model
@@ -119,7 +120,7 @@ mse = evaluate_model(test_dl, model)
 print('MSE: %.3f, RMSE: %.3f' % (mse, sqrt(mse)))
 
 
-X_t = np.zeros((n_test, 768+6))
+X_t = np.zeros((n_test, 768+5+64))
 y_pred = np.zeros(n_test)
 for i,row in df_test.iterrows():
     node = row['author']
@@ -129,7 +130,7 @@ for i,row in df_test.iterrows():
     X_t[i,770] = pr[node]
     X_t[i,771] = centrality[node]
     X_t[i,772] = cc[node]
-    X_t[i,773] = dw[mapping[node]]
+    X_t[i,773:837] = dw[mapping[node]]
 
     y_pred[i] = predict(X_t[i], model)
 
