@@ -10,7 +10,14 @@ from deepwalk_generate import DpWalk
 from processing_abstract import process_abstracts
 from process_authorFile import process_authorFiles
 from final_dico_creation import dictionary_concatenation
-from MLP import prepare_data, MLP, train_model, evaluate_model, predict
+import pickle
+# from MLP import prepare_data, MLP, train_model, evaluate_model, predict
+# import nltk
+# nltk.download('punkt')
+#*** use python -m nltk.downloader punkt ****
+from nltk.tokenize import word_tokenize
+
+stop_words = {'ourselves', 'hers', 'between', 'yourself', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'itself', 'other', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'up', 'to', 'ours', 'had', 'she', 'when', 'at', 'any', 'before', 'them', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
 
 print("reading training data")
 # read training data
@@ -22,33 +29,33 @@ print("reading test data")
 df_test = pd.read_csv('test.csv', dtype={'author': np.int64})
 n_test = df_test.shape[0]
 
-print("loading graph")
-# load the graph  
-G = nx.read_edgelist('coauthorship.edgelist', delimiter=' ', nodetype=int)
-n_nodes = G.number_of_nodes()
-n_edges = G.number_of_edges() 
-print('Number of nodes:', n_nodes)
-print('Number of edges:', n_edges)
+# print("loading graph")
+# # load the graph  
+# G = nx.read_edgelist('coauthorship.edgelist', delimiter=' ', nodetype=int)
+# n_nodes = G.number_of_nodes()
+# n_edges = G.number_of_edges() 
+# print('Number of nodes:', n_nodes)
+# print('Number of edges:', n_edges)
 
-# computes structural features for each node
-print("calculating core_number")
-core_number = nx.core_number(G)
-#node centrality
-centrality = nx.eigenvector_centrality(G)
+# # computes structural features for each node
+# print("calculating core_number")
+# core_number = nx.core_number(G)
+# #node centrality
+# centrality = nx.eigenvector_centrality(G)
 
-#Clustering Coefficient
-print("calculating Clustering Coefficient")
-cc=nx.clustering(G)
-#computes the page rank
-print("calculating Page rank")
-pr=nx.pagerank(G,0.4)
+# #Clustering Coefficient
+# print("calculating Clustering Coefficient")
+# cc=nx.clustering(G)
+# #computes the page rank
+# print("calculating Page rank")
+# pr=nx.pagerank(G,0.4)
 
-print("calculating deep walk")
-#computes Deep Walk
-mapping = {old_label:new_label for new_label, old_label in enumerate(G.nodes())}
-#
-H = nx.relabel_nodes(G, mapping)
-dw=DpWalk(H)
+# print("calculating deep walk")
+# #computes Deep Walk
+# mapping = {old_label:new_label for new_label, old_label in enumerate(G.nodes())}
+# #
+# H = nx.relabel_nodes(G, mapping)
+# dw=DpWalk(H)
 
 
 #*******Get word embeddings
@@ -62,13 +69,15 @@ dw=DpWalk(H)
 
 ##Create Dict of paperID to abstract
 print("extracting abstracts")
-DictOfAbstracts= process_abstracts()
-#print(DictOfAbstracts)
+DictOfAbstracts={}
+#DictOfAbstracts= process_abstracts()
+with open("abstracts_data.pkl", "wb") as myFile:
+    pickle.dump(DictOfAbstracts, myFile)
+# #print(DictOfAbstracts)
 
 ##Create Dict of AuthorID to paperID
 print("extracting paperID")
 DictOfPaperID= process_authorFiles()
-
 #print(DictOfPaperID)
 
 ##Create Dict of AuthorID to allAbstarcts
@@ -76,7 +85,17 @@ print("matching Author to abstracts")
 DictForAuthor= dictionary_concatenation(DictOfAbstracts,DictOfPaperID)
 #print(DictForAuthor)
 
+print("removing stop words")
+#remove stop words
+DictForAuthor_new={}
+for author in DictForAuthor.keys():
+    print(author)
+    word_tokens = word_tokenize(DictForAuthor[author])
+    filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+    DictForAuthor_new[author]=' '.join(filtered_sentence[:512])
+
 ##Get embedding for each author
+counter =0
 print("creating Author embeddings")
 AuthorEmbedding = {}
 for author in DictForAuthor: 
@@ -84,8 +103,9 @@ for author in DictForAuthor:
         AuthorEmbedding[float(author)] = author_embedding(DictForAuthor[author])
     else:
         AuthorEmbedding[float(author)] = author_embedding(' '.join(DictForAuthor[author].split()[:512]))
-
-
+    counter=counter+1
+    print(counter)
+print("Finished word embeddings")
 X = np.zeros((n_train, 768+5+64+1))
 #775
 

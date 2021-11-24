@@ -13,7 +13,7 @@ def process_authorFiles():
 		    if not line:
 		        break
 		    author_id, all_paper_ids = line.split(":")
-		    papers_ids = all_paper_ids.split("-")
+		    papers_ids = all_paper_ids.replace(' ','').replace('\n','').split("-")
 		    dico_authors_to_paperid[author_id] = papers_ids
 		 
 		file1.close()

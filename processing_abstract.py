@@ -82,5 +82,3 @@ def generate_abstract(arr):
     for word in arr:
         s += " " + word
     return s 
-
-process_abstracts()
