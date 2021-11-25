@@ -10,6 +10,7 @@ from deepwalk_generate import DpWalk
 from processing_abstract import process_abstracts
 from process_authorFile import process_authorFiles
 from final_dico_creation import dictionary_concatenation
+from Text_Embedding import Embed_Author
 import pickle
 # from MLP import prepare_data, MLP, train_model, evaluate_model, predict
 # import nltk
@@ -71,8 +72,11 @@ n_test = df_test.shape[0]
 print("extracting abstracts")
 DictOfAbstracts={}
 #DictOfAbstracts= process_abstracts()
-with open("abstracts_data.pkl", "wb") as myFile:
-    pickle.dump(DictOfAbstracts, myFile)
+
+infile = open('abstracts_data.pkl','rb')
+DictOfAbstracts = pickle.load(infile)
+infile.close()
+
 # #print(DictOfAbstracts)
 
 ##Create Dict of AuthorID to paperID
@@ -90,7 +94,8 @@ print("removing stop words")
 DictForAuthor_new={}
 for author in DictForAuthor.keys():
     print(author)
-    word_tokens = word_tokenize(DictForAuthor[author])
+    concat=DictForAuthor[author]
+    word_tokens = word_tokenize(concat)
     filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
     DictForAuthor_new[author]=' '.join(filtered_sentence[:512])
 
@@ -98,14 +103,36 @@ for author in DictForAuthor.keys():
 counter =0
 print("creating Author embeddings")
 AuthorEmbedding = {}
-for author in DictForAuthor: 
-    if len(DictForAuthor[author].split()) < 512:
-        AuthorEmbedding[float(author)] = author_embedding(DictForAuthor[author])
-    else:
-        AuthorEmbedding[float(author)] = author_embedding(' '.join(DictForAuthor[author].split()[:512]))
+# for author in DictForAuthor: 
+#     if len(DictForAuthor[author].split()) < 512:
+#         AuthorEmbedding[float(author)] = author_embedding(DictForAuthor[author])
+#     else:
+#         AuthorEmbedding[float(author)] = author_embedding(' '.join(DictForAuthor[author].split()[:512]))
+#     counter=counter+1
+#     print(counter)
+# print("Finished word embeddings")
+
+# for author in DictForAuthor:
+#     AuthorEmbedding[float(author)] = Embed_Author(DictForAuthor[author])
+
+sentences=[]
+counter=0
+for author in DictForAuthor:
+    #while counter<10000:
+    sentences.append(DictForAuthor_new[author])
+        #counter=counter+1
+
+AllAuthorEmbeddings=Embed_Author(sentences)
+# with open("allEmbeddings.pkl", "wb") as myFile:
+#     pickle.dump(AllAuthorEmbeddings, myFile)
+print("Finished Embedding")
+
+counter=0
+for author in DictForAuthor_new: 
+    AuthorEmbedding[float(author)]=AllAuthorEmbeddings[counter]
     counter=counter+1
-    print(counter)
-print("Finished word embeddings")
+
+
 X = np.zeros((n_train, 768+5+64+1))
 #775
 
