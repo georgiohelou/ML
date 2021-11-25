@@ -94,16 +94,15 @@ print("removing stop words")
 counter=0
 DictForAuthor_new={}
 for author in DictForAuthor.keys():
-    #if counter<1:
+    if counter<100:
     #print(author)
-    concat=DictForAuthor[author]
-    word_tokens = word_tokenize(concat)
-    filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
-    filtered_sentence=filtered_sentence[:100]
-    if(len(filtered_sentence)>510):
-        print(author)
-    DictForAuthor_new[author]=' '.join(filtered_sentence)
-        #counter=counter+1
+        concat=DictForAuthor[author]
+        word_tokens = word_tokenize(concat)
+        filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+        filtered_sentence=filtered_sentence[:300]
+        print(len(filtered_sentence))
+        DictForAuthor_new[author]=' '.join(filtered_sentence)
+        counter=counter+1
 
 ##Get embedding for each author
 counter =0
