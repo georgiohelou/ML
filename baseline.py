@@ -94,13 +94,16 @@ print("removing stop words")
 counter=0
 DictForAuthor_new={}
 for author in DictForAuthor.keys():
-    # if counter<1000:
+    #if counter<1:
     #print(author)
     concat=DictForAuthor[author]
     word_tokens = word_tokenize(concat)
     filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
-    DictForAuthor_new[author]=' '.join(filtered_sentence[:512])
-        # counter=counter+1
+    filtered_sentence=filtered_sentence[:100]
+    if(len(filtered_sentence)>510):
+        print(author)
+    DictForAuthor_new[author]=' '.join(filtered_sentence)
+        #counter=counter+1
 
 ##Get embedding for each author
 counter =0
@@ -123,8 +126,8 @@ counter=0
 for author in DictForAuthor_new:
     #while counter<10000:
     #sentences.append(DictForAuthor_new[author])
-    sentences.append((DictForAuthor_new[author])[:512])
-        #counter=counter+1
+    sentences.append((DictForAuthor_new[author]))
+    #counter=counter+1
 
 AllAuthorEmbeddings=Embed_Author(sentences)
 # with open("allEmbeddings.pkl", "wb") as myFile:
@@ -143,7 +146,8 @@ X = np.zeros((n_train, 768+5+64+1))
 #create array of features and y
 for i,row in df_train.iterrows():
     node = row['author']
-    X[i,:768] = AuthorEmbedding[node].numpy()
+    print(type(node))
+    X[i,:768] = AuthorEmbedding[node]
     X[i,768] = G.degree(node)
     X[i,769] = core_number[node]
     X[i,770] = pr[node]
