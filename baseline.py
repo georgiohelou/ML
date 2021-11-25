@@ -91,13 +91,16 @@ DictForAuthor= dictionary_concatenation(DictOfAbstracts,DictOfPaperID)
 
 print("removing stop words")
 #remove stop words
+counter=0
 DictForAuthor_new={}
 for author in DictForAuthor.keys():
-    print(author)
+    # if counter<1000:
+    #print(author)
     concat=DictForAuthor[author]
     word_tokens = word_tokenize(concat)
     filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
     DictForAuthor_new[author]=' '.join(filtered_sentence[:512])
+        # counter=counter+1
 
 ##Get embedding for each author
 counter =0
@@ -117,9 +120,10 @@ AuthorEmbedding = {}
 
 sentences=[]
 counter=0
-for author in DictForAuthor:
+for author in DictForAuthor_new:
     #while counter<10000:
-    sentences.append(DictForAuthor_new[author])
+    #sentences.append(DictForAuthor_new[author])
+    sentences.append((DictForAuthor_new[author])[:512])
         #counter=counter+1
 
 AllAuthorEmbeddings=Embed_Author(sentences)

@@ -17,7 +17,7 @@ def chunker(seq, size):
 def Embed_Author(sentences):
     counter=0
     AllVectors=[]
-    for group in chunker(sentences, 5000):
+    for group in chunker(sentences, 1000):
         print("Vectorizing batch"+str(counter))
         counter=counter+1
         vectorizer = Vectorizer()
