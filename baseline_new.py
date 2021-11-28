@@ -130,7 +130,11 @@ print("creating model")
 
 reg = MLPRegressor(
     # what if we change our layer sizes?
-    hidden_layer_sizes=(5,17), 
+
+    #hidden_layer_sizes=(5,17), 
+    #hidden_layer_sizes=(5,17,5), 
+    # hidden_layer_sizes=(10,17,10), 
+    hidden_layer_sizes=(400), 
     # what if we change our learning rate?
     learning_rate_init=0.01,
     # what if we change our activation function? (relu, tanh, identity)
@@ -152,7 +156,7 @@ print("write the predictions to file")
 df_test['hindex'] = pd.Series(np.round_(y_pred, decimals=3))
 
 
-df_test.loc[:,["author","hindex"]].to_csv('submission.csv', index=False)
+df_test.loc[:,["author","hindex"]].to_csv('submission2.csv', index=False)
 
 
 
