@@ -12,23 +12,23 @@ from process_authorFile import process_authorFiles
 from final_dico_creation import dictionary_concatenation
 from Text_Embedding import Embed_Author
 import pickle
-# from MLP import prepare_data, MLP, train_model, evaluate_model, predict
-# import nltk
+from MLP import prepare_data, MLP, train_model, evaluate_model, predict
+import nltk
 # nltk.download('punkt')
 #*** use python -m nltk.downloader punkt ****
 from nltk.tokenize import word_tokenize
 
-# stop_words = {'ourselves', 'hers', 'between', 'yourself', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'itself', 'other', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'up', 'to', 'ours', 'had', 'she', 'when', 'at', 'any', 'before', 'them', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
+#stop_words = {'ourselves', 'hers', 'between', 'yourself', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'itself', 'other', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'up', 'to', 'ours', 'had', 'she', 'when', 'at', 'any', 'before', 'them', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
 
-# print("reading training data")
-# # read training data
-# df_train = pd.read_csv('train.csv', dtype={'author': np.int64, 'hindex': np.float32})
-# n_train = df_train.shape[0]
+print("reading training data")
+# read training data
+df_train = pd.read_csv('train.csv', dtype={'author': np.int64, 'hindex': np.float32})
+n_train = df_train.shape[0]
 
-# print("reading test data")
-# # read test data
-# df_test = pd.read_csv('test.csv', dtype={'author': np.int64})
-# n_test = df_test.shape[0]
+print("reading test data")
+# read test data
+df_test = pd.read_csv('test.csv', dtype={'author': np.int64})
+n_test = df_test.shape[0]
 
 print("loading graph")
 # load the graph  
@@ -41,27 +41,67 @@ print('Number of edges:', n_edges)
 # # computes structural features for each node
 # print("calculating core_number")
 # core_number = nx.core_number(G)
+
+# computes structural features for each node
+print("calculating core_number")
+
+infile = open('coreNumber.pkl','rb')
+core_number = pickle.load(infile)
+infile.close()
+
 # #node centrality
 # centrality = nx.eigenvector_centrality(G)
+
+#node centrality
+print("calculating centrality")
+infile = open('centrality.pkl','rb')
+centrality = pickle.load(infile)
+infile.close()
+
 
 # #Clustering Coefficient
 # print("calculating Clustering Coefficient")
 # cc=nx.clustering(G)
+
+#Clustering Coefficient
+print("calculating Clustering Coefficient")
+
+infile = open('ClusteringCoefficient.pkl','rb')
+cc = pickle.load(infile)
+infile.close()
+
+
 # #computes the page rank
 # print("calculating Page rank")
 # pr=nx.pagerank(G,0.4)
 
-# print("calculating deep walk")
+#computes the page rank
+print("calculating Page rank")
+infile = open('PageRank.pkl','rb')
+pr = pickle.load(infile)
+infile.close()
+
+# # print("calculating deep walk")
+# #computes Deep Walk
+# mapping = {old_label:new_label for new_label, old_label in enumerate(G.nodes())}
+# with open("mapping.pkl", "wb") as myFile:
+#     pickle.dump(mapping, myFile)
+
+print("calculating deep walk")
 #computes Deep Walk
-mapping = {old_label:new_label for new_label, old_label in enumerate(G.nodes())}
-with open("mapping.pkl", "wb") as myFile:
-    pickle.dump(mapping, myFile)
+infile = open('mapping.pkl','rb')
+mapping = pickle.load(infile)
+infile.close()
 
-H = nx.relabel_nodes(G, mapping)
-dw=DpWalk(H)
+infile = open('deepWalk.pkl','rb')
+dw = pickle.load(infile)
+infile.close()
 
-with open("deepWalk.pkl", "wb") as myFile:
-    pickle.dump(dw, myFile)
+# H = nx.relabel_nodes(G, mapping)
+# dw=DpWalk(H)
+
+# with open("deepWalk.pkl", "wb") as myFile:
+#     pickle.dump(dw, myFile)
 
 
 #*******Get word embeddings
@@ -145,13 +185,30 @@ with open("deepWalk.pkl", "wb") as myFile:
 #     counter=counter+1
 
 
+
+infile = open('fullEmbeddings.pkl','rb')
+AllAuthorEmbeddings = pickle.load(infile)
+infile.close()
+
+infile = open('DictForAuthor_new.pkl','rb')
+DictForAuthor_new = pickle.load(infile)
+infile.close()
+
+AuthorEmbedding={}
+counter=0
+for author in DictForAuthor_new: 
+    AuthorEmbedding[float(author)]=AllAuthorEmbeddings[counter]
+    counter=counter+1
+
+
+
+# print("set up train features")
 # X = np.zeros((n_train, 768+5+64+1))
 # #775
 
 # #create array of features and y
 # for i,row in df_train.iterrows():
 #     node = row['author']
-#     print(type(node))
 #     X[i,:768] = AuthorEmbedding[node]
 #     X[i,768] = G.degree(node)
 #     X[i,769] = core_number[node]
@@ -161,38 +218,41 @@ with open("deepWalk.pkl", "wb") as myFile:
 #     X[i,773:837] = dw[mapping[node]]
 #     X[i,837] = row['hindex']
 
-# print(X)
+# print("converting train features to csv")
 # #convert to CSV file
 # pd.DataFrame(X).to_csv("file.csv", header=None, index=None)
 
 
 
-# # prepare the data
-# path = 'file.csv'
-# train_dl, test_dl = prepare_data(path)
-# print(len(train_dl.dataset), len(test_dl.dataset))
-# # define the network
-# model = MLP(837)
-# # train the model
-# train_model(train_dl, model)
-# # evaluate the model
-# mse = evaluate_model(test_dl, model)
-# print('MSE: %.3f, RMSE: %.3f' % (mse, sqrt(mse)))
+# prepare the data
+print("preparing data...")
+path = 'file.csv'
+train_dl, test_dl = prepare_data(path)
+print(len(train_dl.dataset), len(test_dl.dataset))
+# define the network
+print("defining model...")
+model = MLP(837)
+# train the model
+print("starting training...")
+train_model(train_dl, model)
+# evaluate the model
+mse = evaluate_model(test_dl, model)
+print('MSE: %.3f, RMSE: %.3f' % (mse, sqrt(mse)))
 
+print("set up test features")
+X_t = np.zeros((n_test, 768+5+64))
+y_pred = np.zeros(n_test)
+for i,row in df_test.iterrows():
+    node = row['author']
+    X_t[i,:768] = AuthorEmbedding[node]
+    X_t[i,768] = G.degree(node)
+    X_t[i,769] = core_number[node]
+    X_t[i,770] = pr[node]
+    X_t[i,771] = centrality[node]
+    X_t[i,772] = cc[node]
+    X_t[i,773:837] = dw[mapping[node]]
 
-# X_t = np.zeros((n_test, 768+5+64))
-# y_pred = np.zeros(n_test)
-# for i,row in df_test.iterrows():
-#     node = row['author']
-#     X_t[i,:768] = AuthorEmbedding[node].numpy()
-#     X_t[i,768] = G.degree(node)
-#     X_t[i,769] = core_number[node]
-#     X_t[i,770] = pr[node]
-#     X_t[i,771] = centrality[node]
-#     X_t[i,772] = cc[node]
-#     X_t[i,773:837] = dw[mapping[node]]
-
-#     y_pred[i] = predict(X_t[i], model)
+    y_pred[i] = predict(X_t[i], model)
 
 
 # # # make a single prediction (expect class=1)
@@ -243,14 +303,14 @@ with open("deepWalk.pkl", "wb") as myFile:
 # # print("Started Training")
 # # reg.fit(X_train, y_train)
 
-# # print("Started Testing")
-# # y_pred = reg.predict(X_test)
+# print("Started Testing")
+# y_pred = reg.predict(X_test)
 
-# # # write the predictions to file
-# df_test['hindex'] = pd.Series(np.round_(y_pred, decimals=3))
-# print(df_test)
+print("writing to prediction files")
+# # write the predictions to file
+df_test['hindex'] = pd.Series(np.round_(y_pred, decimals=3))
 
-# df_test.loc[:,["author","hindex"]].to_csv('submission2.csv', index=False)
+df_test.loc[:,["author","hindex"]].to_csv('submission2.csv', index=False)
 
 
 

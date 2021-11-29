@@ -90,6 +90,7 @@ def train_model(train_dl, model):
     # enumerate epochs
     for epoch in range(100):
         # enumerate mini batches
+        print("epoch:"+str(epoch))
         for i, (inputs, targets) in enumerate(train_dl):
             # clear the gradients
             optimizer.zero_grad()
@@ -97,6 +98,7 @@ def train_model(train_dl, model):
             yhat = model(inputs)
             # calculate loss
             loss = criterion(yhat, targets)
+            print(loss)
             # credit assignment
             loss.backward()
             # update model weights

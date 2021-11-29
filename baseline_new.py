@@ -134,7 +134,7 @@ reg = MLPRegressor(
     #hidden_layer_sizes=(5,17), 
     #hidden_layer_sizes=(5,17,5), 
     # hidden_layer_sizes=(10,17,10), 
-    hidden_layer_sizes=(400), 
+    hidden_layer_sizes=(100,200), 
     # what if we change our learning rate?
     learning_rate_init=0.01,
     # what if we change our activation function? (relu, tanh, identity)
