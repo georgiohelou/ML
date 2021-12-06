@@ -1,4 +1,4 @@
-import os
+# import os
 import pandas as pd
 import numpy as np
 from numpy import sqrt
@@ -6,7 +6,6 @@ import networkx as nx
 from sklearn.linear_model import Lasso
 from sklearn.neural_network import MLPRegressor
 from page import pagerank
-from Bert_function import author_embedding
 from deepwalk_generate import DpWalk
 from processing_abstract import process_abstracts
 from process_authorFile import process_authorFiles
@@ -18,7 +17,6 @@ import nltk
 # nltk.download('punkt')
 #*** use python -m nltk.downloader punkt ****
 from nltk.tokenize import word_tokenize
-
 
 print("reading training data")
 # read training data
@@ -40,7 +38,6 @@ print('Number of edges:', n_edges)
 
 # computes structural features for each node
 print("calculating core_number")
-
 infile = open('coreNumber.pkl','rb')
 core_number = pickle.load(infile)
 infile.close()
@@ -67,21 +64,26 @@ pr = pickle.load(infile)
 infile.close()
 
 
-print("calculating deep walk")
-#computes Deep Walk
+# print("calculating deep walk")
+# mapping2 = {old_label:new_label for new_label, old_label in enumerate(G.nodes())}
+# with open("mapping2.pkl", "wb") as myFile:
+#     pickle.dump(mapping2, myFile)
+# computes Deep Walk
 infile = open('mapping.pkl','rb')
-mapping = pickle.load(infile)
+mapping2 = pickle.load(infile)
 infile.close()
 
-infile = open('deepWalk.pkl','rb')
+infile = open('deepWalk.pkl', 'rb')
 dw = pickle.load(infile)
 infile.close()
+print("type(dw) : ", type(dw))
+print("len(dw) = ", len(dw))
 
 
 
 print("generating word embeddings")
-infile = open('fullEmbeddings.pkl','rb')
-AllAuthorEmbeddings = pickle.load(infile)
+infile = open('fullEmbeddings_random.pkl', 'rb')
+AllAuthorEmbeddings = pickle.load(infile) # dico
 infile.close()
 
 infile = open('DictForAuthor_new.pkl','rb')
@@ -108,7 +110,7 @@ for i,row in df_train.iterrows():
     X_train[i,770] = pr[node]
     X_train[i,771] = centrality[node]
     X_train[i,772] = cc[node]
-    X_train[i,773:837] = dw[mapping[node]]
+    X_train[i, 773:837] = dw[mapping2[node]]
     y_train[i] = row['hindex']
 
 print("set up test features")
@@ -123,7 +125,7 @@ for i,row in df_test.iterrows():
     X_test[i,770] = pr[node]
     X_test[i,771] = centrality[node]
     X_test[i,772] = cc[node]
-    X_test[i,773:837] = dw[mapping[node]]
+    X_test[i, 773:837] = dw[mapping2[node]]
 
 
 print("creating model")
@@ -134,9 +136,11 @@ reg = MLPRegressor(
     #hidden_layer_sizes=(5,17), 
     #hidden_layer_sizes=(5,17,5), 
     # hidden_layer_sizes=(10,17,10), 
-    hidden_layer_sizes=(100,200), 
+    # hidden_layer_sizes=(100,200), 
+    # hidden_layer_sizes=(15, 20), -> gave MSE 62.89214
+    hidden_layer_sizes=(15, 20),
     # what if we change our learning rate?
-    learning_rate_init=0.01,
+    learning_rate_init=0.01, #### changed from 0.01 ####
     # what if we change our activation function? (relu, tanh, identity)
     activation='relu',
     max_iter=200,
@@ -156,9 +160,5 @@ print("write the predictions to file")
 df_test['hindex'] = pd.Series(np.round_(y_pred, decimals=3))
 
 
-df_test.loc[:,["author","hindex"]].to_csv('submission2.csv', index=False)
-
-
-
-
+df_test.loc[:,["author","hindex"]].to_csv('nath.csv', index=False)
 
