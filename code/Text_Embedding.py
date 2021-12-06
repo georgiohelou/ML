@@ -21,7 +21,7 @@ class Vectorizer:
         model_class, tokenizer_class, pretrained_weights = (ppb.DistilBertModel,
                                                             ppb.DistilBertTokenizer,
                                                             pretrained_weights)
-        tokenizer = tokenizer_class.from_pretrained(pretrained_weights)
+        tokenizer = tokenizer_class.from_pretrained(pretrained_weights)#,model_max_length=512)
         model = model_class.from_pretrained(pretrained_weights)
         tokenized = list(map(lambda x: tokenizer.encode(x, add_special_tokens=True,truncation=True), sentences))
 
@@ -47,7 +47,7 @@ def chunker(seq, size):
 def Embed_Author(sentences):
     counter=0
     AllVectors=[]
-    for group in chunker(sentences, 500):
+    for group in chunker(sentences, 1000):
         print("Vectorizing batch"+str(counter))
         counter=counter+1
         vectorizer = Vectorizer()
