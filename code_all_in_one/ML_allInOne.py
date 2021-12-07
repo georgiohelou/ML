@@ -119,8 +119,8 @@ for i,row in df_test.iterrows():
 print("creating model")
 
 reg = MLPRegressor(
-    hidden_layer_sizes=(100,200), 
-    learning_rate_init=0.01,
+    hidden_layer_sizes=(150, 200, 100, 30),
+    learning_rate_init=0.001,
     activation='relu',
     max_iter=200,
     random_state=2,
