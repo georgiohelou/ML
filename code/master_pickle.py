@@ -3,7 +3,8 @@
 """
 Created on Sat Nov 27 17:35:46 2021
 
-@author: nathan.pollet
+Concatenate all the bucket pickle files into 1
+
 """
 
 import pickle
