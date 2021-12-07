@@ -16,7 +16,7 @@ To repeat the experiments, two options are available: **Option 1**: process the 
         4. Once all 37 "bucket embeddings" generated, run ``master_pickle.py`` to reassemble them into a single pickle file: ``fullEmbeddings_random.pkl``.
         5. Place this file in the **``features``** folder.
         6. Run ``MLP_pipeline2_with_feature_generation.py``.
-    - **Option 2** <span style="color:blue">*recommended*</span>.
+    - **Option 2** <span style="color:blue">(*recommended*)</span>.
         1. Go [here](https://drive.google.com/drive/folders/1CDvV8U3VG0SWPUb1hqMhVmUhCs3TEucH) and download the **``data``** and **``features``** folders
         2. Place these folders alongside ``code`` (overwrite if necessary)
         3. Run ``MLP_pipeline_with_feature_loading.py``
