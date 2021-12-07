@@ -19,21 +19,23 @@ from matplotlib.ticker import PercentFormatter
 # nltk.download('punkt')
 #*** use python -m nltk.downloader punkt ****
 from nltk.tokenize import word_tokenize
+from processTextData import processTextData
+import yolo
 print("All libraries imported.")
 
 print("loading training data")
 # read training data
-df_train = pd.read_csv('data/train.csv', dtype={'author': np.int64, 'hindex': np.float32})
+df_train = pd.read_csv('./data/train.csv', dtype={'author': np.int64, 'hindex': np.float32})
 n_train = df_train.shape[0]
 
 print("loading test data")
 # read test data
-df_test = pd.read_csv('data/test.csv', dtype={'author': np.int64})
+df_test = pd.read_csv('./data/test.csv', dtype={'author': np.int64})
 n_test = df_test.shape[0]
 
 print("loading graph")
 # load the graph  
-G = nx.read_edgelist('data/coauthorship.edgelist', delimiter=' ', nodetype=int)
+G = nx.read_edgelist('./data/coauthorship.edgelist', delimiter=' ', nodetype=int)
 n_nodes = G.number_of_nodes()
 n_edges = G.number_of_edges() 
 print('Number of nodes:', n_nodes)
@@ -63,11 +65,11 @@ H = nx.relabel_nodes(G, mapping)
 dw=DpWalk(H)
 
 print("loading word embeddings")
-infile = open('features/fullEmbeddings_random.pkl', 'rb')
+infile = open('./features/fullEmbeddings_random.pkl', 'rb')
 AllAuthorEmbeddings = pickle.load(infile) 
 infile.close()
 
-infile = open('data/DictForAuthor_new.pkl','rb')
+infile = open('./data/authors_with_all_abstracts_random_max450words.pkl', 'rb')
 DictForAuthor_new = pickle.load(infile)
 infile.close()
 
