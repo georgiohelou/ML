@@ -20,7 +20,6 @@ from matplotlib.ticker import PercentFormatter
 #*** use python -m nltk.downloader punkt ****
 from nltk.tokenize import word_tokenize
 from processTextData import processTextData
-import yolo
 print("All libraries imported.")
 
 print("loading training data")
