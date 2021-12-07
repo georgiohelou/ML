@@ -28,7 +28,7 @@ from nltk.tokenize import word_tokenize
 
 def processTextData():
 
-    process_abstracts()
+    process_abstracts()  # generates 'abstracts_data.pkl'
 
     #Create Dict of paperID to abstract
     print("extracting abstracts")
