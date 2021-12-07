@@ -5,7 +5,7 @@
 
 #### Project structure and file details:
 Note: ``ProcessSteps.md`` describes the main steps of our analysis.
-* The **``code_all_in_one``** folder contains the files necessary to repeat our experiments simply by placing the original data files in it and running ``ML_allInOne.py``. However, due to the nature of the data processing tasks, this would take an enormous amount of time to complete and would require excessive (unrealistic) memory requirements if not properly parallelized. ==We advice not to attempt this method and to use the feature loading approach instead== (details below).
+* The **``code_all_in_one``** folder contains the files necessary to repeat our experiments simply by placing the original data files in it and running ``ML_allInOne.py``. However, due to the nature of the data processing tasks, this would take an enormous amount of time to complete and would require excessive (unrealistic) memory requirements if not properly parallelized. <span style="color:blue">*We advice not to attempt this method and to use the feature loading approach instead*</span> (details below).
 * The **``code``** folder contains all the scripts developed for the analysis. All tasks are covered: data loading, data processing, feature generation, feature saving and loading, model initialization, model training, model testing and graphing of the results.
 To repeat the experiments, two options are available: **Option 1**: process the data, generate the required features and run the experiments, **Option 2**: load the required processed data and features and run the experiments. 
 **Note:** for both options, a **``data``** directory and a **``features``** directory should exist alongside the **``code``** directory, as initially provided.
@@ -16,11 +16,11 @@ To repeat the experiments, two options are available: **Option 1**: process the 
         4. Once all 37 "bucket embeddings" generated, run ``master_pickle.py`` to reassemble them into a single pickle file: ``fullEmbeddings_random.pkl``.
         5. Place this file in the **``features``** folder.
         6. Run ``MLP_pipeline2_with_feature_generation.py``.
-    - **Option 2** (==recommended==)
+    - **Option 2** <span style="color:blue">*recommended*</span>.
         1. Go [here](https://drive.google.com/drive/folders/1CDvV8U3VG0SWPUb1hqMhVmUhCs3TEucH) and download the **``data``** and **``features``** folders
         2. Place these folders alongside ``code`` (overwrite if necessary)
         3. Run ``MLP_pipeline_with_feature_loading.py``
 
-Do not hesitate to email us if there are any difficulties :).
+Do not hesitate to email us if there are any difficulties :). 
 
 nathan.pollet@polytechnique.edu, georgio.el-helou@polytechnique.edu, rebecca.jaubert@polytechnique.edu
