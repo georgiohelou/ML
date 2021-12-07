@@ -54,7 +54,7 @@ def process_abstracts():
             print("**********")
     print("len(Dict) : ", len(Dict))
 
-    a_file = open("abstracts_data.pkl", "wb")
+    a_file = open("../data/abstracts_data.pkl", "wb")
     pickle.dump(Dict, a_file)
     a_file.close()
     return Dict

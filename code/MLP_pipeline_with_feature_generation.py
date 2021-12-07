@@ -55,10 +55,8 @@ cc = nx.clustering(G)
 print("calculating Page rank")
 pr = nx.pagerank(G, 0.4)
 
-print("loading DeepWalk mapping ")
-infile = open('features/mapping.pkl','rb')
-mapping = pickle.load(infile)
-infile.close()
+print("creating DeepWalk mapping ")
+mapping = {old_label:new_label for new_label, old_label in enumerate(G.nodes())}
 
 print("calculating DeepWalk")
 H = nx.relabel_nodes(G, mapping)

@@ -17,7 +17,7 @@ from typing import Dict
 # f.close()
 ############
 
-infile = open('sentences.pkl', 'rb')
+infile = open('sentences_cleaned_random_max450words.pkl', 'rb')
 sentences = pickle.load(infile)
 infile.close()
 
@@ -38,12 +38,3 @@ with open(f"bucket{var}.pkl", 'wb') as f:
 
 print("pickle file saved.")
 print("Done")
-
-
-# AllAuthorEmbeddings = Embed_Author(bucket)
-# print("Finished Embedding")
-
-# counter = 0
-# for author in DictForAuthor_new:
-#     AuthorEmbedding[float(author)] = AllAuthorEmbeddings[counter]
-#     counter = counter+1
