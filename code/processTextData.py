@@ -41,6 +41,7 @@ def processTextData():
     print("extracting authors-paperIDs [dico]")
     DictOfPaperID = process_authorFiles()
 
+    #in this scenario we will randomly remove words to match BERT input size (so use method "2")
     print("matching authors to all of their abstracts *separated* [dico-list]")
     DictForAuthor = dictionary_concatenation2(DictOfAbstracts, DictOfPaperID)
 
@@ -102,10 +103,11 @@ def processTextData():
         abstractConcat = ' '.join(DictForAuthor_cleaned[authorID])
         abstractConcatWord = abstractConcat.split()
         numWords = len(abstractConcatWord)
-
+        #abstract size already inferior to bert input size
         if numWords <= minNumWords:
             new_dico[authorID] = ' '.join(abstractConcatWord)
             continue
+        #random method chosen to remove extra words
         else:
             while(numWords > minNumWords):
                 rmv_index = random.randint(0, numWords-1)

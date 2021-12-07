@@ -17,6 +17,15 @@ from typing import Dict
 # f.close()
 ############
 
+'''
+    Send resulting 'sentences_cleaned_random_max450words.pkl' file to school computers to compute BERT embeddings.
+    This parallelized process is done via 'sentence_generator.py' which divides the authors-abstracts dataset in 37
+    buckets and computes BERT embeddings for a given one. The bucket number/ID is specified by the user through the 
+    command line interface.
+    Once all 37 "bucket embeddings" generated, they are reassembled into a single pickle file by running 'master_pickle.py'.
+    This results in the generation of 'fullEmbeddings_random.pkl' which should be placed in the 'features' folder.
+'''
+
 infile = open('sentences_cleaned_random_max450words.pkl', 'rb')
 sentences = pickle.load(infile)
 infile.close()
