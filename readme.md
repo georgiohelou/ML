@@ -24,6 +24,6 @@ To repeat the experiments, two options are available: **Option 1**: process the 
         2. Place these folders alongside ``code`` (overwrite if necessary)
         3. Run ``MLP_pipeline_with_feature_loading.py``
 
-Do not hesitate to email us if there are any difficulties :). 
+Do not hesitate to email us if you face any difficulty :). 
 
 nathan.pollet@polytechnique.edu, georgio.el-helou@polytechnique.edu, rebecca.jaubert@polytechnique.edu
