@@ -2,8 +2,11 @@
 ### Ecole Polytechnique - INF 554 Machine and Deep Learning - Data Challenge: H-index Prediction  
 **Georgio El Helou, Rebecca Jaubert, Nathan Pollet.** 
 
-
-#### Project structure and file details:
+#### Dependencies
+Add the following dependencies inside of your environment (if not already installed): ``Pandas``, ``numpy``, ``networkx``, ``sklearn``, ``pickle``, ``nltk``, ``torch``, ``gensim``, ``transformers`` (recent versions recommended). 
+We have used conda to install packages when available but please note that some packages such as ``transformers`` can only be installed via ``pip``.
+In case you receive an ntlk warning please run the following command from your terminal: ``python -m nltk.downloader punkt``. The last parameter, “punkt”, is to be changed to any undownloaded file mentioned in the warning message.
+#### Project structure and file details
 Note: ``ProcessSteps.md`` describes the main steps of our analysis.
 * The **``code_all_in_one``** folder contains the files necessary to repeat our experiments simply by placing the original data files in it and running ``ML_allInOne.py``. However, due to the nature of the data processing tasks, this would take an enormous amount of time to complete and would require excessive (unrealistic) memory requirements if not properly parallelized. <span style="color:blue">*We advice not to attempt this method and to use the feature loading approach instead*</span> (details below).
 * The **``code``** folder contains all the scripts developed for the analysis. All tasks are covered: data loading, data processing, feature generation, feature saving and loading, model initialization, model training, model testing and graphing of the results.
