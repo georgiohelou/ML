@@ -1,4 +1,4 @@
-## Steps #Baseline
+## Process Steps
 
 1. loading **training** and **test** csv data, loading the graph
 2. computing graph features:
