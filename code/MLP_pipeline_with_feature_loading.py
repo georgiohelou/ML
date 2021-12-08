@@ -121,7 +121,8 @@ print("creating model")
 reg = MLPRegressor(
     # hidden_layer_sizes=(559),  # rule of thumb: (num inputs + 1) * (2/3)
     # hidden_layer_sizes=(250, 20),
-    hidden_layer_sizes=(150, 200, 100, 30),
+    # hidden_layer_sizes=(150, 200, 100, 30),
+    hidden_layer_sizes=(20,60,20),
     # hidden_layer_sizes=(150, 200, 100, 50, 15),
     learning_rate_init=0.001,
     activation='relu',
